@@ -86,7 +86,8 @@ contract NFTPatent is ERC721URIStorage
             uint256 currentIndex = 0;
 
             Patent[] memory items = new Patent[](_TotalItems);
-            for (uint256 i = 0; i < TotalItems.current(); i++) {
+            
+            for (uint256 i = 0; i < _TotalItems; i++) {
              uint256 currentId = i + 1;
              Patent storage currentItem = TokenIdToPatent[currentId];
              items[currentIndex] = currentItem;
@@ -101,7 +102,8 @@ contract NFTPatent is ERC721URIStorage
            uint256 _TotalItems = Categories[_category];
            uint256 currentIndex = 0;
            Patent[] memory items = new Patent[](_TotalItems);
-           for(uint256 i=0;i< TotalItems.current();i++)
+           uint256 totalItems = TotalItems.current()
+           for(uint256 i=0;i< totalItems;i++)
            {
                uint256 currentId = i + 1;
                if(keccak256(abi.encodePacked(TokenIdToPatent[currentId].category))== keccak256(abi.encodePacked((_category))))
@@ -121,8 +123,8 @@ contract NFTPatent is ERC721URIStorage
             uint256 currentIndex = 0;
             uint256 _TotalItems = balances[_user];
             Patent[] memory items = new Patent[](_TotalItems);
-            
-            for(uint256 i=0;i< TotalItems.current();i++)
+            uint256 totalItems = TotalItems.current();
+            for(uint256 i=0;i< totalItems;i++)
             {
                 if(TokenIdToPatent[i+1].owner == _user )
                 {
@@ -150,7 +152,6 @@ contract NFTPatent is ERC721URIStorage
        if(TokenIdToPatent[_tokenId].currentBider != address(0))
        {
        (bool sent, ) = TokenIdToPatent[_tokenId].currentBider.call{value: TokenIdToPatent[_tokenId].price}("");
-       //tronWeb.transactionBuilder.sendTrx(address(this),TokenIdToNFTItem[_tokenId].price, TokenIdToNFTItem[_tokenId].current_bider );
        require(sent, "Failed to send Ether");
        }
        TokenIdToPatent[_tokenId].currentBider = payable(msg.sender);
